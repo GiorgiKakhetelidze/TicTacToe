@@ -6,18 +6,22 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shemajamebeli4.databinding.X0ItemBinding
+import kotlin.math.sqrt
 
-typealias CardClick = (count : Int) -> Unit
+typealias CardClick = (count: Int) -> Unit
 
 class GameAdapter : RecyclerView.Adapter<GameAdapter.ItemViewHolder>() {
 
-    val resultList: MutableList<String> = mutableListOf()
     var count = 0
+
     var cardList: MutableList<X0Item> = mutableListOf()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
+
+    //val resultList = MutableList(cardList.size) {  MutableList(cardList.size) { "text" } }
+    var resultList: MutableList<MutableList<String>> = mutableListOf()
 
     private var isX = true
 
@@ -58,13 +62,19 @@ class GameAdapter : RecyclerView.Adapter<GameAdapter.ItemViewHolder>() {
                 binding.xyImgView.setImageResource(R.mipmap.x)
                 binding.xyImgView.isClickable = false
                 binding.xyImgView.isFocusable = false
-                resultList.add("x")
+                val y =
+                    if (adapterPosition == 0) 0 else adapterPosition / sqrt(cardList.size.toDouble()).toInt()
+                val x = adapterPosition % sqrt(cardList.size.toDouble()).toInt()
+                resultList[x][y] = "x"
             } else {
                 isX = true
                 binding.xyImgView.setImageResource(R.mipmap.o)
                 binding.xyImgView.isClickable = false
                 binding.xyImgView.isFocusable = false
-                resultList.add("o")
+                val y =
+                    if (adapterPosition == 0) 0 else adapterPosition / sqrt(cardList.size.toDouble()).toInt()
+                val x = adapterPosition % sqrt(cardList.size.toDouble()).toInt()
+                resultList[x][y] = "o"
             }
         }
     }

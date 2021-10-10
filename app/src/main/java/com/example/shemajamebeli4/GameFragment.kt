@@ -40,11 +40,17 @@ class GameFragment : Fragment() {
             X0Item(ImageButton(requireContext()))
         }
 
+        val resultList = MutableList(convertedSize) { MutableList(convertedSize) { "text" } }
+
+        binding?.resetBtn?.setOnClickListener {
+
+        }
+
         binding?.recycleView?.layoutManager =
             GridLayoutManager(requireContext(), sqrt(size.toDouble()).toInt())
         binding?.recycleView?.adapter = adapter
         adapter.cardList = list
-
+        adapter.resultList = resultList
         adapter.itemClick = { count ->
             if (count >= convertedSize + convertedSize - 1)
                 checkWin(convertedSize)
@@ -52,42 +58,48 @@ class GameFragment : Fragment() {
     }
 
     private fun checkWin(size: Int) {
-        val resultList = convertFlattenResultListToNestedWithSize(size)
+        /*val resultList = convertFlattenResultListToNestedWithSize(size)*/
 
         //Rows
-        checkLeftToRight(resultList)
+        checkLeftToRight(size, adapter.resultList)
 
         //Columns
-        val transposedList = transpose(resultList)
-        checkLeftToRight(transposedList)
+        val transposedList = transpose(adapter.resultList)
+        checkLeftToRight(size, transposedList)
 
         //Diagonals
-        checkMainDiagonal(resultList)
+        checkMainDiagonal(size, adapter.resultList)
 
     }
 
-    private fun checkMainDiagonal(resultList: MutableList<MutableList<String>>) {
+    private fun checkMainDiagonal(size: Int, resultList: MutableList<MutableList<String>>) {
         val mainDiagonal = mutableListOf<String>()
 
-        for (index in 0 until resultList.size)
-            mainDiagonal.add(resultList[index][index])
+        for (x in 0 until resultList.size) {
+            for (y in 0 until resultList[x].size) {
+                if (x == y) {
+                    mainDiagonal.add(resultList[x][y])
+                }
+            }
 
-        if (mainDiagonal.toSet().size == 1 && mainDiagonal.first() == "x")
+        }
+
+        if (size == mainDiagonal.size && mainDiagonal.toSet().size == 1 && mainDiagonal.first() == "x")
             Toast.makeText(requireContext(), "Winner is X", Toast.LENGTH_SHORT).show()
-        else if (mainDiagonal.toSet().size == 1 && mainDiagonal.first() == "o")
+        else if (size == mainDiagonal.size && mainDiagonal.toSet().size == 1 && mainDiagonal.first() == "o")
             Toast.makeText(requireContext(), "Winner is O", Toast.LENGTH_SHORT).show()
     }
 
-    private fun checkLeftToRight(nestedList: MutableList<MutableList<String>>) {
-        for (list in nestedList) {
-            if (list.toSet().size == 1 && list.first() == "o")
+    private fun checkLeftToRight(size: Int, resultList: MutableList<MutableList<String>>) {
+        for (list in resultList) {
+            if (list.size == size && list.toSet().size == 1 && list.first() == "o")
                 Toast.makeText(requireContext(), "Winner is O", Toast.LENGTH_SHORT).show()
-            else if (list.toSet().size == 1 && list.first() == "x")
+            else if (list.size == size && list.toSet().size == 1 && list.first() == "x")
                 Toast.makeText(requireContext(), "Winner is X", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun convertFlattenResultListToNestedWithSize(size: Int): MutableList<MutableList<String>> {
+/*    private fun convertFlattenResultListToNestedWithSize(size: Int): MutableList<MutableList<String>> {
         val nestedList: MutableList<MutableList<String>> = mutableListOf()
         val tempList: MutableList<String> = mutableListOf()
         var count = 0
@@ -103,7 +115,7 @@ class GameFragment : Fragment() {
         }
 
         return nestedList
-    }
+    }*/
 
     private fun <T> transpose(list: MutableList<MutableList<T>>): MutableList<MutableList<T>> {
         val ret: MutableList<MutableList<T>> = mutableListOf()
