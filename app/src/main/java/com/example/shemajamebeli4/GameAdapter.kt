@@ -7,16 +7,20 @@ import android.widget.ImageButton
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shemajamebeli4.databinding.X0ItemBinding
 
-typealias CardClick = (item: X0Item, position: Int, isX: Boolean) -> Unit
+typealias CardClick = (count : Int) -> Unit
 
 class GameAdapter : RecyclerView.Adapter<GameAdapter.ItemViewHolder>() {
 
+    val resultList: MutableList<String> = mutableListOf()
+    var count = 0
     var cardList: MutableList<X0Item> = mutableListOf()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
+
     private var isX = true
+
     lateinit var itemClick: CardClick
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -43,23 +47,26 @@ class GameAdapter : RecyclerView.Adapter<GameAdapter.ItemViewHolder>() {
         }
 
         override fun onClick(p0: View?) {
+            count++
             setXO()
+            itemClick.invoke(count)
         }
 
-        private fun setXO(){
+        private fun setXO() {
             if (isX) {
                 isX = false
                 binding.xyImgView.setImageResource(R.mipmap.x)
                 binding.xyImgView.isClickable = false
                 binding.xyImgView.isFocusable = false
+                resultList.add("x")
             } else {
                 isX = true
                 binding.xyImgView.setImageResource(R.mipmap.o)
                 binding.xyImgView.isClickable = false
                 binding.xyImgView.isFocusable = false
+                resultList.add("o")
             }
         }
-
     }
 
 }
