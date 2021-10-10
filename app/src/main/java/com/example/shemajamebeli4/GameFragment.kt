@@ -43,7 +43,10 @@ class GameFragment : Fragment() {
         val resultList = MutableList(convertedSize) { MutableList(convertedSize) { "text" } }
 
         binding?.resetBtn?.setOnClickListener {
-
+            adapter.resultList.clear()
+            adapter.cardList.clear()
+            adapter.notifyDataSetChanged()
+            init()
         }
 
         binding?.recycleView?.layoutManager =
@@ -58,7 +61,6 @@ class GameFragment : Fragment() {
     }
 
     private fun checkWin(size: Int) {
-        /*val resultList = convertFlattenResultListToNestedWithSize(size)*/
 
         //Rows
         checkLeftToRight(size, adapter.resultList)
@@ -98,24 +100,6 @@ class GameFragment : Fragment() {
                 Toast.makeText(requireContext(), "Winner is X", Toast.LENGTH_SHORT).show()
         }
     }
-
-/*    private fun convertFlattenResultListToNestedWithSize(size: Int): MutableList<MutableList<String>> {
-        val nestedList: MutableList<MutableList<String>> = mutableListOf()
-        val tempList: MutableList<String> = mutableListOf()
-        var count = 0
-
-        for (element in adapter.resultList) {
-            count++
-            tempList.add(element)
-            if (count == size) {
-                nestedList.add(tempList.toMutableList())
-                tempList.clear()
-                count = 0
-            }
-        }
-
-        return nestedList
-    }*/
 
     private fun <T> transpose(list: MutableList<MutableList<T>>): MutableList<MutableList<T>> {
         val ret: MutableList<MutableList<T>> = mutableListOf()
