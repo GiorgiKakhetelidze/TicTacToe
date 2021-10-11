@@ -69,12 +69,17 @@ class GameFragment : Fragment() {
         val transposedList = transpose(adapter.resultList)
         checkLeftToRight(size, transposedList)
 
-        //Diagonals
-        checkMainDiagonal(size, adapter.resultList)
+        //DiagonalMain
+        checkDiagonal(size, adapter.resultList)
 
+        //DiagonalSecondary
+        var transposedListDiagonal = transpose(adapter.resultList)
+        transposedListDiagonal = transpose(transposedListDiagonal)
+        transposedListDiagonal = transpose(transposedListDiagonal)
+        checkDiagonal(size,  transposedListDiagonal)
     }
 
-    private fun checkMainDiagonal(size: Int, resultList: MutableList<MutableList<String>>) {
+    private fun checkDiagonal(size: Int, resultList: MutableList<MutableList<String>>) {
         val mainDiagonal = mutableListOf<String>()
 
         for (x in 0 until resultList.size) {
